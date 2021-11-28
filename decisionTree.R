@@ -6,6 +6,7 @@
 # Load the tidyverse, rpart, and rpart.plot libraries
 library(tidyverse)
 library(rpart.plot)
+library(smotefamily)
 
 # Read ModelChurn.csv into a tibble called telecom 
 telecom <- read_csv(file = "./data/ModelChurn.csv")
@@ -22,12 +23,12 @@ telecomNoNA <- telecom[!is.na(telecom$TotalCharges),]
 # Randomly split the dataset into telecomTraining (75% of records) and 
 # telecomTesting (25% of records) using 370 as the random seed
 set.seed(777)
-telecomSample <- sample(x= nrow(telecom),
-                        size = round(nrow(telecom) * 0.75),
+telecomSample <- sample(x= nrow(telecomNoNA),
+                        size = round(nrow(telecomNoNA) * 0.75),
                         replace = FALSE
 )
-telecomTraining <- telecom[telecomSample,]
-telecomTesting <- telecom[-telecomSample,]
+telecomTraining <- telecomNoNA[telecomSample,]
+telecomTesting <- telecomNoNA[-telecomSample,]
 
 # Generate the decision tree model to predict Churn based on the other 
 # variables in the dataset. Use 0.01 as the complexity parameter.
@@ -86,11 +87,16 @@ telecomVisual <- telecom2NoNA %>%
   mutate(SeniorCitizen = ifelse(SeniorCitizen ==  0, 'NO', 'YES'))
 
 set.seed(777)
+telecomSample <- sample(x= nrow(telecomNoNA),
+                        size = round(nrow(telecomNoNA) * 0.75),
+                        replace = FALSE
+)
 telecomVisualTraining <- telecomVisual[telecomSample,]
 telecomVisualTesting <- telecomVisual[-telecomSample,]
+
 telecomChurnDecisiontreeModel2 <- rpart(formula = Churn ~.,
                                         method = "class",
-                                        cp = .002,  #0.002  0.7977273
+                                        cp = .005,  #0.005  0.7906712
                                         data = telecomVisualTraining)
 telecomChurnPrediction2 <- predict(telecomChurnDecisiontreeModel2,
                                    telecomVisualTesting,
