@@ -211,7 +211,8 @@ churnTesting$Churn <- as.factor(churnTesting$Churn)
 churnTrainingSmoted$class <- NULL
 
 #### Note: SMOTE effect 
-##### KNN  (59, 0.7940842) -> (9, 0.705347) 
+##### KNN:  N (59, 0.7940842) | N + B (9, 0.705347) 
+##### DTree: (0.005, 0.7906712) | N (xxxx) | N + B (xxx)
 churnTraining$Churn <- as.factor(churnTraining$Churn)
 
 
@@ -232,7 +233,6 @@ churnTraining <- churnTraining %>% select(-Churn)
 
 churnTestingLabel <- churnTesting %>%  select(Churn) 
 churnTesting <- churnTesting %>% select(-Churn) 
-
 #------------
 # Non-SMOTE data
 #------------
@@ -325,3 +325,36 @@ SMOTEmaxAUC <-
                       max(kValueMatrixSMOTE[,"Predictive accuracy"])]
 SMOTEmaxAUCMatrix <- kValueMatrixSMOTE[which(kValueMatrixSMOTE == maxAUC[1]),]
 print(SMOTEmaxAUCMatrix)
+
+###############
+# Logistic regression
+##############
+
+###############
+# Naïve Bayes
+##############
+
+###############
+# Decision tree
+##############
+
+#------------
+# original data
+#------------
+telecomVisual
+
+#------------
+# Non SMOTE data (N)
+#------------
+churnTraining
+churnTesting
+
+#------------
+# SMOTE data (N + B)
+#------------
+churnTrainingSmoted
+churnTesting
+
+###############
+# Neural network
+##############
