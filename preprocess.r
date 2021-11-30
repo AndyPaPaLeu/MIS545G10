@@ -51,6 +51,9 @@ telecomVisual <- telecomNoNA %>%
 # Numeric data analysis
 #========
 summary(telecomVisual)
+
+
+
 telecomVisNumeric <- telecomVisual %>% 
   select(tenure,MonthlyCharges,TotalCharges)
 
@@ -100,7 +103,7 @@ telecomVisNumeric %>%
   ggplot() +
   geom_point(mapping = aes(y = tenure , x = MonthlyCharges), color = "blue",
              size = 2) +
-  labs(title = "xxxxx",
+  labs(title = "Relation Between Tenure and MonthlyCharges",
        x = "tenure", y = "MonthlyCharges")
 
 #========
@@ -108,12 +111,22 @@ telecomVisNumeric %>%
 #========
 summary(telecomVisual)
 telecomVisual %>%
-ggplot() +
-  geom_bar(mapping = aes(x =Churn, fill = gender), color = "black") +
-  labs(title = "xxxx",
-     x = "xxxx", y = "number") 
-# -- Go to find the interesting points. 
+  ggplot() +
+  geom_bar(mapping = aes(x =Churn, fill = InternetService), color = "black") +
+  labs(title = "Customer Churn based on InternetService",
+       x = "Churn", y = "number") 
 
+telecomVisual %>%
+  ggplot() +
+  geom_bar(mapping = aes(x =Churn, fill = Contract), color = "black") +
+  labs(title = "Customer Churn based on Contract duration",
+       x = "Churn", y = "number") 
+
+telecomVisual %>%
+  ggplot() +
+  geom_bar(mapping = aes(x =Churn, fill = OnlineSecurity), color = "black") +
+  labs(title = "Customer Churn based on Online Security",
+       x = "Churn", y = "number") 
 
 
 #########################
@@ -210,13 +223,14 @@ churnTrainingSmoted$Churn <- as.factor(churnTrainingSmoted$Churn)
 churnTesting$Churn <- as.factor(churnTesting$Churn)
 churnTrainingSmoted$class <- NULL
 
+# Note:
+# No Na data [telecomVisual]
+# Non SMOTE data (N)  [churnTraining / churnTesting]
+# SMOTE data (N + B) [churnTrainingSmoted / churnTesting]
+
 #### Note: SMOTE effect 
-##### KNN:  N (59, 0.7940842) | N + B (9, 0.705347) 
-##### DTree: (0.005, 0.7906712) | N (xxxx) | N + B (xxx)
-churnTraining$Churn <- as.factor(churnTraining$Churn)
-
-
-
+##### KNN:  N (59, 0.7940842) | N+B (9, 0.705347) 
+##### DTree: (0.005, 0.7906712) | N (0.0015, 0.7923777) | N+B (0.001,0.7491468)
 
 
 
@@ -365,7 +379,7 @@ print(telecomChurnDecisiontreeModel2)
 #------------
 telecomChurnDecisiontreeModel2 <- rpart(formula = Churn ~.,
                                         method = "class",
-                                        cp = .005,  #0.005  0.7906712
+                                        cp = .005,  #0.0015  0.7923777
                                         data = churnTraining)
 telecomChurnPrediction2 <- predict(telecomChurnDecisiontreeModel2,
                                    churnTesting,
@@ -383,7 +397,7 @@ print(telecomChurnDecisiontreeModel2)
 #------------
 telecomChurnDecisiontreeModel2 <- rpart(formula = Churn ~.,
                                         method = "class",
-                                        cp = .005,  #0.005  0.7906712
+                                        cp = .0015,  #0.001  0.7491468
                                         data = churnTrainingSmoted)
 telecomChurnPrediction2 <- predict(telecomChurnDecisiontreeModel2,
                                    churnTesting,
