@@ -337,23 +337,65 @@ print(SMOTEmaxAUCMatrix)
 ###############
 # Decision tree
 ##############
+library(rpart.plot)
+#------------
+# original data [telecomVisual]
+#------------
+telecomVisualTraining <- telecomVisual[sampleSet,]
+telecomVisualTesting <- telecomVisual[-sampleSet,]
+
+telecomChurnDecisiontreeModel2 <- rpart(formula = Churn ~.,
+                                        method = "class",
+                                        cp = .005,  #0.005  0.7906712
+                                        data = telecomVisualTraining)
+telecomChurnPrediction2 <- predict(telecomChurnDecisiontreeModel2,
+                                   telecomVisualTesting,
+                                   type = "class")
+telecomChurnConfusionMatrix2 <- table(telecomVisualTesting$Churn ,
+                                      telecomChurnPrediction2)
+print(telecomChurnConfusionMatrix2)
+predictiveAccuracy2 <- sum(diag(telecomChurnConfusionMatrix2)) / 
+  nrow(telecomVisualTesting)
+print(predictiveAccuracy2)
+rpart.plot(telecomChurnDecisiontreeModel2)
+print(telecomChurnDecisiontreeModel2)
 
 #------------
-# original data
+# Non SMOTE data (N)  [churnTraining / churnTesting]
 #------------
-telecomVisual
-
+telecomChurnDecisiontreeModel2 <- rpart(formula = Churn ~.,
+                                        method = "class",
+                                        cp = .005,  #0.005  0.7906712
+                                        data = churnTraining)
+telecomChurnPrediction2 <- predict(telecomChurnDecisiontreeModel2,
+                                   churnTesting,
+                                   type = "class")
+telecomChurnConfusionMatrix2 <- table(churnTesting$Churn ,
+                                      telecomChurnPrediction2)
+print(telecomChurnConfusionMatrix2)
+predictiveAccuracy2 <- sum(diag(telecomChurnConfusionMatrix2)) / 
+  nrow(churnTesting)
+print(predictiveAccuracy2)
+rpart.plot(telecomChurnDecisiontreeModel2)
+print(telecomChurnDecisiontreeModel2)
 #------------
-# Non SMOTE data (N)
+# SMOTE data (N + B) [churnTrainingSmoted / churnTesting]
 #------------
-churnTraining
-churnTesting
-
-#------------
-# SMOTE data (N + B)
-#------------
-churnTrainingSmoted
-churnTesting
+telecomChurnDecisiontreeModel2 <- rpart(formula = Churn ~.,
+                                        method = "class",
+                                        cp = .005,  #0.005  0.7906712
+                                        data = churnTrainingSmoted)
+telecomChurnPrediction2 <- predict(telecomChurnDecisiontreeModel2,
+                                   churnTesting,
+                                   type = "class")
+telecomChurnConfusionMatrix2 <- table(churnTesting$Churn ,
+                                      telecomChurnPrediction2)
+print(telecomChurnConfusionMatrix2)
+predictiveAccuracy2 <- sum(diag(telecomChurnConfusionMatrix2)) / 
+  nrow(churnTesting)
+print(predictiveAccuracy2)
+rpart.plot(telecomChurnDecisiontreeModel2)
+print(telecomChurnDecisiontreeModel2)
 
 ###############
 # Neural network
